@@ -11,8 +11,6 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
-const posts_module_1 = require("./posts/posts.module");
-const cats_module_1 = require("./cats/cats.module");
 const typeorm_1 = require("@nestjs/typeorm");
 const auth_module_1 = require("./auth/auth.module");
 const core_1 = require("@nestjs/core");
@@ -24,8 +22,6 @@ AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             users_module_1.UsersModule,
-            posts_module_1.PostsModule,
-            cats_module_1.CatsModule,
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'postgres',
                 host: 'localhost',
