@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/users/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -41,24 +42,29 @@ export class UsersService {
     user.email = createUserDto.email;
     user.firstName = createUserDto.firstName;
     user.userName = createUserDto.userName;
-    user.password = createUserDto.password;
+    const saltOrRounds = 10;
+    const passhass = await bcrypt.hash(createUserDto.password, saltOrRounds);
+    user.password = passhass;
     user.lastName = createUserDto.lastName;
     user.isActive = createUserDto.isActive;
     user.roles = createUserDto.roles;
     return await this.usersRepository.save(user);
   }
 
-  // async update(updateUserDto: UpdateUserDto): Promise<User> {
-  //   const user = this.usersRepository.findOneBy({
-  //     userName: updateUserDto
-  //   });
-  //   user.email = updateUserDto.email;
-  //   user.firstName = updateUserDto.firstName;
-  //   user.userName = updateUserDto.userName;
-  //   user.password = updateUserDto.password;
-  //   user.lastName = updateUserDto.lastName;
-  //   user.role = updateUserDto.role;
-  //   user.isActive = updateUserDto.isActive;
-  //   return await this.usersRepository.save(user);
-  // }
+  async update(id, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.usersRepository.findOneBy({
+      id: id,
+    });
+    if (!user) {
+      throw new NotFoundException(`Resource with ID ${id} not found`);
+    }
+    user.email = updateUserDto.email;
+    user.firstName = updateUserDto.firstName;
+    user.userName = updateUserDto.userName;
+    user.password = updateUserDto.password;
+    user.lastName = updateUserDto.lastName;
+    user.roles = updateUserDto.roles;
+    user.isActive = updateUserDto.isActive;
+    return await this.usersRepository.save(user);
+  }
 }

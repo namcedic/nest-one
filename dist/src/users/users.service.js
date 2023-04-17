@@ -14,9 +14,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
-const user_entity_1 = require("./user.entity");
+const user_entity_1 = require("src/users/user.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
+const bcrypt = require("bcrypt");
 let UsersService = class UsersService {
     constructor(usersRepository) {
         this.usersRepository = usersRepository;
@@ -46,10 +47,28 @@ let UsersService = class UsersService {
         user.email = createUserDto.email;
         user.firstName = createUserDto.firstName;
         user.userName = createUserDto.userName;
-        user.password = createUserDto.password;
+        const saltOrRounds = 10;
+        const passhass = await bcrypt.hash(createUserDto.password, saltOrRounds);
+        user.password = passhass;
         user.lastName = createUserDto.lastName;
         user.isActive = createUserDto.isActive;
         user.roles = createUserDto.roles;
+        return await this.usersRepository.save(user);
+    }
+    async update(id, updateUserDto) {
+        const user = await this.usersRepository.findOneBy({
+            id: id,
+        });
+        if (!user) {
+            throw new common_1.NotFoundException(`Resource with ID ${id} not found`);
+        }
+        user.email = updateUserDto.email;
+        user.firstName = updateUserDto.firstName;
+        user.userName = updateUserDto.userName;
+        user.password = updateUserDto.password;
+        user.lastName = updateUserDto.lastName;
+        user.roles = updateUserDto.roles;
+        user.isActive = updateUserDto.isActive;
         return await this.usersRepository.save(user);
     }
 };

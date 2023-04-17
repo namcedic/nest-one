@@ -2,18 +2,15 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { PostsModule } from './posts/posts.module';
-import { CatsModule } from './cats/cats.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/user.entity';
 import { AuthModule } from './auth/auth.module';
-import { AuthndnService } from './authndn/authndn.service';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
+import { RolesGuard } from './users/roles.guard';
 
 @Module({
   imports: [
     UsersModule,
-    PostsModule,
-    CatsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -27,6 +24,16 @@ import { AuthndnService } from './authndn/authndn.service';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AuthndnService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

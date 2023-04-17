@@ -15,22 +15,12 @@ const jwt_1 = require("@nestjs/jwt");
 const constants_1 = require("./constants");
 const common_2 = require("../common");
 const core_1 = require("@nestjs/core");
-const roles_decorator_1 = require("../users/roles.decorator");
 let AuthGuard = class AuthGuard {
     constructor(jwtService, reflector) {
         this.jwtService = jwtService;
         this.reflector = reflector;
     }
     async canActivate(context) {
-        const requiredRoles = this.reflector.getAllAndOverride(roles_decorator_1.ROLES_KEY, [
-            context.getHandler(),
-            context.getClass(),
-        ]);
-        if (!requiredRoles) {
-            return true;
-        }
-        const { user } = context.switchToHttp().getRequest();
-        return requiredRoles.some((role) => { var _a; return (_a = user.roles) === null || _a === void 0 ? void 0 : _a.includes(role); });
         const isPublic = this.reflector.getAllAndOverride(common_2.IS_PUBLIC_KEY, [
             context.getHandler(),
             context.getClass(),

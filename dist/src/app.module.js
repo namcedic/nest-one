@@ -11,19 +11,17 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const users_module_1 = require("./users/users.module");
-const posts_module_1 = require("./posts/posts.module");
-const cats_module_1 = require("./cats/cats.module");
 const typeorm_1 = require("@nestjs/typeorm");
 const auth_module_1 = require("./auth/auth.module");
-const authndn_service_1 = require("./authndn/authndn.service");
+const core_1 = require("@nestjs/core");
+const auth_guard_1 = require("./auth/auth.guard");
+const roles_guard_1 = require("./users/roles.guard");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             users_module_1.UsersModule,
-            posts_module_1.PostsModule,
-            cats_module_1.CatsModule,
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'postgres',
                 host: 'localhost',
@@ -37,7 +35,17 @@ AppModule = __decorate([
             auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService, authndn_service_1.AuthndnService],
+        providers: [
+            app_service_1.AppService,
+            {
+                provide: core_1.APP_GUARD,
+                useClass: auth_guard_1.AuthGuard,
+            },
+            {
+                provide: core_1.APP_GUARD,
+                useClass: roles_guard_1.RolesGuard,
+            },
+        ],
     })
 ], AppModule);
 exports.AppModule = AppModule;
