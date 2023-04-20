@@ -14,7 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
-const user_entity_1 = require("src/users/user.entity");
+const user_entity_1 = require("./user.entity");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const bcrypt = require("bcrypt");
@@ -53,6 +53,7 @@ let UsersService = class UsersService {
         user.lastName = createUserDto.lastName;
         user.isActive = createUserDto.isActive;
         user.roles = createUserDto.roles;
+        user.addresses = createUserDto.addresses;
         return await this.usersRepository.save(user);
     }
     async update(id, updateUserDto) {
@@ -69,6 +70,7 @@ let UsersService = class UsersService {
         user.lastName = updateUserDto.lastName;
         user.roles = updateUserDto.roles;
         user.isActive = updateUserDto.isActive;
+        user.addresses = updateUserDto.addresses;
         return await this.usersRepository.save(user);
     }
 };

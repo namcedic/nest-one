@@ -24,8 +24,8 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Post()
+  @Public()
   // @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Admin)
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }

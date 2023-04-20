@@ -48,6 +48,7 @@ export class UsersService {
     user.lastName = createUserDto.lastName;
     user.isActive = createUserDto.isActive;
     user.roles = createUserDto.roles;
+    user.addresses = createUserDto.addresses;
     return await this.usersRepository.save(user);
   }
 
@@ -65,6 +66,7 @@ export class UsersService {
     user.lastName = updateUserDto.lastName;
     user.roles = updateUserDto.roles;
     user.isActive = updateUserDto.isActive;
+    user.addresses = updateUserDto.addresses;
     return await this.usersRepository.save(user);
   }
 }

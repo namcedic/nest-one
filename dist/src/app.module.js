@@ -16,6 +16,9 @@ const auth_module_1 = require("./auth/auth.module");
 const core_1 = require("@nestjs/core");
 const auth_guard_1 = require("./auth/auth.guard");
 const roles_guard_1 = require("./users/roles.guard");
+const graphql_1 = require("@nestjs/graphql");
+const posts_module_1 = require("./posts/posts.module");
+const apollo_1 = require("@nestjs/apollo");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -25,14 +28,19 @@ AppModule = __decorate([
             typeorm_1.TypeOrmModule.forRoot({
                 type: 'postgres',
                 host: 'localhost',
-                port: 5437,
+                port: 5435,
                 username: 'postgres',
                 password: 'postgres',
-                database: 'postgres',
+                database: 'data',
                 autoLoadEntities: true,
                 synchronize: true,
             }),
             auth_module_1.AuthModule,
+            graphql_1.GraphQLModule.forRoot({
+                driver: apollo_1.ApolloDriver,
+                autoSchemaFile: true,
+            }),
+            posts_module_1.PostsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [

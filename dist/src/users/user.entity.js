@@ -44,6 +44,12 @@ __decorate([
 ], User.prototype, "password", void 0);
 __decorate([
     (0, typeorm_1.Column)({
+        type: 'jsonb',
+    }),
+    __metadata("design:type", Object)
+], User.prototype, "addresses", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
         type: 'enum',
         enum: role_enum_1.Role,
         array: true,

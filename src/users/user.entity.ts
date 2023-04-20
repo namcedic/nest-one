@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { Role } from './role.enum';
+import { Address } from './address.interface';
 
 @Entity()
 export class User {
@@ -23,6 +24,11 @@ export class User {
 
   @Column()
   password: string;
+
+  @Column({
+    type: 'jsonb',
+  })
+  addresses: Address;
 
   @Column({
     type: 'enum',
