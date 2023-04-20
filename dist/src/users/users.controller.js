@@ -14,13 +14,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
-const create_user_dto_1 = require("./dto/create-user.dto");
 const users_service_1 = require("./users.service");
 const role_enum_1 = require("./role.enum");
 const roles_decorator_1 = require("./roles.decorator");
 const auth_guard_1 = require("../auth/auth.guard");
 const common_2 = require("../common");
-const update_user_dto_1 = require("./dto/update-user.dto");
+const client_1 = require("@prisma/client");
 let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
@@ -29,16 +28,19 @@ let UsersController = class UsersController {
         return this.usersService.create(createUserDto);
     }
     update(id, updateUserDto) {
-        return this.usersService.update(id, updateUserDto);
+        return this.usersService.update({
+            where: { id },
+            data: updateUserDto,
+        });
     }
     findAll() {
         return this.usersService.findAll();
     }
     findOne(id) {
-        return this.usersService.findOne(id);
+        return this.usersService.findOne({ id });
     }
     remove(id) {
-        return this.usersService.remove(id);
+        return this.usersService.remove({ id });
     }
 };
 __decorate([
@@ -46,7 +48,7 @@ __decorate([
     (0, common_2.Public)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_user_dto_1.CreateUserDto]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "create", null);
 __decorate([
@@ -55,7 +57,7 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, update_user_dto_1.UpdateUserDto]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "update", null);
 __decorate([

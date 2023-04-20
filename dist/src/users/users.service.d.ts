@@ -1,14 +1,15 @@
-import { User } from 'src/users/user.entity';
-import { CreateUserDto } from './dto/create-user.dto';
-import { Repository } from 'typeorm';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaService } from '../../prisma/prisma.service';
+import { Prisma, User } from '@prisma/client';
 export declare class UsersService {
-    private usersRepository;
-    constructor(usersRepository: Repository<User>);
+    private prisma;
+    constructor(prisma: PrismaService);
     findAll(): Promise<User[]>;
-    findOne(id: number): Promise<User>;
-    findOneByUserName(userName: string): Promise<User>;
-    remove(id: number): Promise<void>;
-    create(createUserDto: CreateUserDto): Promise<User>;
-    update(id: any, updateUserDto: UpdateUserDto): Promise<User>;
+    findOne(userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<User | null>;
+    findOneByUserName(userName: string): Promise<User | null>;
+    remove(where: Prisma.UserWhereUniqueInput): Promise<User>;
+    create(data: Prisma.UserCreateInput): Promise<User>;
+    update(params: {
+        where: Prisma.UserWhereUniqueInput;
+        data: Prisma.UserUpdateInput;
+    }): Promise<User>;
 }

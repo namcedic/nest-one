@@ -5,12 +5,6 @@ const app_module_1 = require("./app.module");
 const common_1 = require("@nestjs/common");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    const add = (a, b, callback) => {
-        callback(a + b);
-    };
-    add(1, 2, (sum) => {
-        console.log(sum);
-    });
     app.enableCors({ origin: '*' });
     app.useGlobalPipes(new common_1.ValidationPipe());
     await app.listen(3000);

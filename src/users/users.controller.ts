@@ -11,13 +11,13 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
-import { User } from './user.entity';
 import { Role } from './role.enum';
 import { Roles } from './roles.decorator';
 import { AuthGuard } from '../auth/auth.guard';
 import { Public } from '../common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RolesGuard } from './roles.guard';
+import { Prisma, User } from '@prisma/client';
 
 @Controller('users')
 export class UsersController {
@@ -26,7 +26,7 @@ export class UsersController {
   @Post()
   @Public()
   // @UseGuards(AuthGuard, RolesGuard)
-  create(@Body() createUserDto: CreateUserDto): Promise<User> {
+  create(@Body() createUserDto: Prisma.UserCreateInput): Promise<User> {
     return this.usersService.create(createUserDto);
   }
 
@@ -34,9 +34,12 @@ export class UsersController {
   @Roles(Role.Admin)
   update(
     @Param('id') id: number,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body() updateUserDto: Prisma.UserUpdateInput,
   ): Promise<User> {
-    return this.usersService.update(id, updateUserDto);
+    return this.usersService.update({
+      where: { id },
+      data: updateUserDto,
+    });
   }
 
   @Get()
@@ -48,13 +51,13 @@ export class UsersController {
   @Get(':id')
   @Roles(Role.User)
   findOne(@Param('id', ParseIntPipe) id: number): Promise<User> {
-    return this.usersService.findOne(id);
+    return this.usersService.findOne({ id });
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard)
   @Roles(Role.Admin)
-  remove(@Param('id') id: number): Promise<void> {
-    return this.usersService.remove(id);
+  remove(@Param('id') id: number): Promise<User> {
+    return this.usersService.remove({ id });
   }
 }
